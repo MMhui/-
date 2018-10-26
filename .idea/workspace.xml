@@ -2,17 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4f425fea-1585-4f94-ae24-0b1c7612b390" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/components/todo/store/actionCreator.ts" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/components/todo/store/actionTypes.ts" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/components/todo/store/index.ts" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/src/components/todo/store/reducer.ts" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change beforePath="$PROJECT_DIR$/src/components/todo/Item/index.tsx" afterPath="$PROJECT_DIR$/src/components/todo/Item/index.tsx" />
-      <change beforePath="$PROJECT_DIR$/src/components/todo/Main/index.tsx" afterPath="$PROJECT_DIR$/src/components/todo/Main/index.tsx" />
-      <change beforePath="$PROJECT_DIR$/tslint.json" afterPath="$PROJECT_DIR$/tslint.json" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" afterPath="$PROJECT_DIR$/yarn.lock" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -29,8 +19,8 @@
       <file leaf-file-name="index.tsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/todo/Main/index.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="251">
-              <caret line="72" column="17" lean-forward="true" selection-start-line="72" selection-start-column="17" selection-end-line="72" selection-end-column="17" />
+            <state relative-caret-position="274">
+              <caret line="73" column="51" lean-forward="true" selection-start-line="73" selection-start-column="51" selection-end-line="73" selection-end-column="51" />
               <folding />
             </state>
           </provider>
@@ -293,12 +283,20 @@
       <workItem from="1540375122264" duration="6090000" />
       <workItem from="1540384366686" duration="2110000" />
       <workItem from="1540432662936" duration="54425000" />
-      <workItem from="1540563567849" duration="870000" />
+      <workItem from="1540563567849" duration="1027000" />
     </task>
+    <task id="LOCAL-00001" summary="redux集成，redux-tools使用">
+      <created>1540564508614</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1540564508614</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="63495000" />
+    <option name="totallyTimeSpent" value="63652000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
@@ -330,6 +328,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="redux集成，redux-tools使用" />
+    <option name="LAST_COMMIT_MESSAGE" value="redux集成，redux-tools使用" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -548,6 +550,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="414">
           <caret line="48" column="0" lean-forward="true" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -596,6 +599,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="276">
           <caret line="12" column="27" lean-forward="true" selection-start-line="12" selection-start-column="27" selection-end-line="12" selection-end-column="27" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -663,8 +667,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/todo/Main/index.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="72" column="17" lean-forward="true" selection-start-line="72" selection-start-column="17" selection-end-line="72" selection-end-column="17" />
+        <state relative-caret-position="274">
+          <caret line="73" column="51" lean-forward="true" selection-start-line="73" selection-start-column="51" selection-end-line="73" selection-end-column="51" />
           <folding />
         </state>
       </provider>
