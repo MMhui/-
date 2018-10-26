@@ -1,4 +1,6 @@
 import * as React from 'react';
+import * as actionCreator from '../store/actionCreator';
+import store from '../store';
 import Item from '../Item';
 import Tabs from '../Tabs';
 import './index.styl';
@@ -13,123 +15,75 @@ interface IState {
     filter: string;
     left: number;
     todoList: ITodo[];
-    value: string;
+    inputValue: string;
 }
 
-class Todo extends React.PureComponent<{}, IState> {
+class Todo extends React.Component<{}, IState> {
     constructor(props: object) {
         super(props);
-        this.state = {
-            filter: 'all',
-            left: 0,
-            todoList: [],
-            value: '',
-        };
-        this.onChange = this.onChange.bind(this);
-        this.onDelete = this.onDelete.bind(this);
-        this.handleAddItem = this.handleAddItem.bind(this);
-        this.onChangeText = this.onChangeText.bind(this);
-        this.handleTodoListFilter = this.handleTodoListFilter.bind(this);
-        this.handleClearCompleted = this.handleClearCompleted.bind(this);
+        this.state = store.getState();
+
+        // 可以手动订阅更新，也可以事件绑定到视图层。
+        store.subscribe(() => this.handleStoreChange());
+
+        this.handleStoreChange = this.handleStoreChange.bind(this);
     }
 
-    public onChangeText(e: any) {
-        this.setState({
-            value: e.target.value
-        });
+    public handleStoreChange() {
+        this.setState(store.getState());
     }
 
-    public handleAddItem(e: any) {
+    public onChangeInputValue(e: any) {
+        const action = actionCreator.changeValueAction(e.target.value);
+        store.dispatch(action);
+    }
+
+    public handleAddTodoListItem(e: any) {
         if (e.keyCode === 13 && e.target.value !== '') {
-            this.setState((prevState: any) => {
-                return {
-                    todoList: prevState.todoList.concat([{
-                        completed: false,
-                        content: prevState.value,
-                        id: prevState.todoList.length
-                    }]),
-                    value: ''
-                }
-            });
-            this.handleUpdateLeft();
+            const action = actionCreator.addTodoListItemAction();
+            store.dispatch(action);
         }
     }
 
-    public onChange(id: number) {
-        this.setState((prevState: any) => {
-            return {
-                todoList: prevState.todoList.map((todo: ITodo) => {
-                    if (todo.id === id) {
-                        todo.completed = !todo.completed
-                    }
-                    return todo
-                })
-            }
-        })
-        this.handleUpdateLeft();
+    public onChangeTodoListItemState(id: number) {
+        const action = actionCreator.changeTodoListItemStateAction(id);
+        store.dispatch(action);
     }
 
-    public onDelete(id: number) {
-        this.setState((prevState: any, props: any) => {
-            return {
-                todoList: prevState.todoList.filter((todo: ITodo) => {
-                    return todo.id !== id
-                })
-            }
-        })
-        this.handleUpdateLeft();
+    public onDeleteTodoListItem(id: number) {
+        const action = actionCreator.deleteTodoListItemAction(id);
+        store.dispatch(action);
     }
 
     public handleTodoListFilter(condition: string) {
-        this.setState({
-            filter: condition
-        });
-        this.handleUpdateLeft();
+        const action = actionCreator.handleTodoListFilterAction(condition);
+        store.dispatch(action);
     }
 
     public handleClearCompleted() {
-        this.setState((prevState: IState, props: any) => {
-            return {
-                todoList: prevState.todoList.filter((todo: ITodo) => todo.completed !== true)
-            }
-        });
-        this.handleUpdateLeft();
-    }
-
-    public handleUpdateLeft() {
-        this.setState((prevState: IState, props: any) => {
-            return {
-                left: prevState.todoList.filter((todo: ITodo) => {
-                    if (prevState.filter === 'active') {
-                        return todo.completed === false;
-                    } else if (prevState.filter === 'completed') {
-                        return todo.completed === true;
-                    } else {
-                        return true;
-                    }
-                }).length
-            }
-        })
+        const action = actionCreator.handleTodoListClearAction();
+        store.dispatch(action);
     }
 
     public render() {
+        const {filter, inputValue, left, todoList} = this.state;
         return (
             <section className="real-app">
-                <input className="add-input" autoFocus={true} type="text" onKeyDown={this.handleAddItem} onChange={this.onChangeText} value={this.state.value}  placeholder="接下去要做什么？" />
+                <input className="add-input" autoFocus={true} type="text" onKeyDown={this.handleAddTodoListItem} onChange={this.onChangeInputValue} value={inputValue}  placeholder="接下去要做什么？" />
                 {
-                     this.state.todoList.map((todo: ITodo) => {
-                         if (this.state.filter === 'active' && todo.completed === false) {
-                             return <Item key={String(todo.id)} todo={todo} onChange={this.onChange} onDelete={this.onDelete} />
-                         } else if (this.state.filter === 'completed' && todo.completed === true) {
-                             return <Item key={String(todo.id)} todo={todo} onChange={this.onChange} onDelete={this.onDelete} />
-                         } else if (this.state.filter === 'all') {
-                             return <Item key={String(todo.id)} todo={todo} onChange={this.onChange} onDelete={this.onDelete} />
+                    todoList.map((todo: ITodo) => {
+                         if (filter === 'active' && todo.completed === false) {
+                             return <Item key={String(todo.id)} todo={todo} onChangeTodoListItemState={this.onChangeTodoListItemState} onDeleteTodoListItem={this.onDeleteTodoListItem} />
+                         } else if (filter === 'completed' && todo.completed === true) {
+                             return <Item key={String(todo.id)} todo={todo} onChangeTodoListItemState={this.onChangeTodoListItemState} onDeleteTodoListItem={this.onDeleteTodoListItem} />
+                         } else if (filter === 'all') {
+                             return <Item key={String(todo.id)} todo={todo} onChangeTodoListItemState={this.onChangeTodoListItemState} onDeleteTodoListItem={this.onDeleteTodoListItem} />
                          } else {
                              return null;
                          }
                      })
                 }
-                <Tabs filter={this.state.filter} left={this.state.left} handleTodoListFilter={this.handleTodoListFilter} handleClearCompleted={this.handleClearCompleted} />
+                <Tabs filter={filter} left={left} handleTodoListFilter={this.handleTodoListFilter} handleClearCompleted={this.handleClearCompleted} />
             </section>
         );
     }
