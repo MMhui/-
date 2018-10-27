@@ -4,3 +4,7 @@ export const DELETE_TODO_LIST_ITEM = 'delete_todo_list_item';
 export const CHANGE_TODO_LIST_ITEM_STATE = 'change_todo_list_item_state';
 export const HANDLE_TODO_LIST_FILTER = 'handle_todo_list_filter';
 export const HANDLE_TODO_LIST_CLEAR = 'handle_todo_list_clear';
+export const GET_INIT_TODO_LIST = 'get_init_todo_list';
+export const INIT_TODO_LIST = 'init_todo_list';
+export const GET_INIT_INPUT_VALUE = 'get_init_input_value';
+export const INIT_INPUT_VALUE = 'init_input_value';

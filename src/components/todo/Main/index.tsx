@@ -65,6 +65,13 @@ class Todo extends React.Component<{}, IState> {
         store.dispatch(action);
     }
 
+    public componentDidMount() {
+        const getInitInputValueAction = actionCreator.getInitInputValueAction();
+        store.dispatch(getInitInputValueAction);
+        const getInitTodoListAction = actionCreator.getInitTodoListAction();
+        store.dispatch(getInitTodoListAction);
+    }
+
     public render() {
         const {filter, inputValue, left, todoList} = this.state;
         return (

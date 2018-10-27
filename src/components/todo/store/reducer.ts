@@ -40,6 +40,12 @@ function calcLeft(filter: string, todoList: ITodo[]) {
 // reducer可以接受state，但是不能修改state
 export default (state: IState = defaultState, action: IAction) => {
     switch (action.type) {
+        case actionTypes.INIT_INPUT_VALUE:
+            state.inputValue = action.value;
+            return state;
+        case actionTypes.INIT_TODO_LIST:
+            state.todoList = action.value;
+            return state;
         case actionTypes.CHAGE_INPUT_VALUE:
             state.inputValue = action.value;
             return state;
@@ -47,7 +53,7 @@ export default (state: IState = defaultState, action: IAction) => {
             state.todoList.push({
                 completed: false,
                 content: state.inputValue,
-                id: state.todoList.length
+                id: parseInt(String(Math.random() * 1000), 10)
             });
             state.inputValue = '';
             state.left = calcLeft(state.filter, state.todoList);
