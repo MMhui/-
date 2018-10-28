@@ -45,6 +45,7 @@ export default (state: IState = defaultState, action: IAction) => {
             return state;
         case actionTypes.INIT_TODO_LIST:
             state.todoList = action.value;
+            state.left = calcLeft(state.filter, state.todoList);
             return state;
         case actionTypes.CHAGE_INPUT_VALUE:
             state.inputValue = action.value;
