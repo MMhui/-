@@ -6,7 +6,7 @@ import Todo from './components/todo/Main';
 import {Provider} from 'react-redux';
 import store from './components/todo/store';
 
-class App extends React.Component {
+class App extends React.Component<any, any> {
     public render() {
         return (
             <Provider store={store}>

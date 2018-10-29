@@ -1,17 +1,18 @@
 import * as actionTypes from './actionTypes';
+import { fromJS, Map, List } from 'immutable';
 
-interface ITodo {
+interface ITodo extends Map<string, any>{
     completed: boolean;
     content: string;
     id: number;
 }
 
-interface IState {
+interface IState extends Map<string, any>{
     filterName: string;
     left: number;
-    todoList: ITodo[];
+    todoList: List<ITodo>;
     inputValue: string;
-    tabs: string[]
+    tabs: List<string>
 }
 
 interface IAction {
@@ -19,81 +20,64 @@ interface IAction {
     value?: any;
 }
 
-const defaultState = {
+const defaultState = fromJS({
     filterName: 'all',
-    inputValue: '',
+    inputValue: 'ss',
     left: 0,
     tabs: ['all', 'active', 'completed'],
     todoList: [],
-};
+});
 
-function calcLeft(filter: string, todoList: ITodo[]) {
+function calcLeft(filterName: string, todoList: List<ITodo>) {
     return todoList.filter((todo: ITodo) => {
-        if (filter === 'active') {
-            return todo.completed === false;
-        } else if (filter === 'completed') {
-            return todo.completed === true;
+        if (filterName === 'active') {
+            return todo.get('completed') === false;
+        } else if (filterName === 'completed') {
+            return todo.get('completed') === true;
         } else {
             return true;
         }
-    }).length
+    }).size;
 }
 
 // reducer可以接受state，但是不能修改state
 export default (state: IState = defaultState, action: IAction) => {
     switch (action.type) {
         case actionTypes.INIT_INPUT_VALUE:
-            state = JSON.parse(JSON.stringify(state));
-            state.inputValue = action.value;
-            return state;
+            return state.set('inputValue', action.value);
         case actionTypes.INIT_TODO_LIST:
-            state = JSON.parse(JSON.stringify(state));
-            state.todoList = action.value;
-            state.left = calcLeft(state.filterName, state.todoList);
-            return state;
+            return state.withMutations((newState: IState) => newState.set('todoList', fromJS(action.value)).set('left', calcLeft(newState.get('filterName'), newState.get('todoList'))));
         case actionTypes.CHAGE_INPUT_VALUE:
-            state = JSON.parse(JSON.stringify(state));
-            state.inputValue = action.value;
-            return state;
+            return state.set('inputValue', action.value);
         case actionTypes.ADD_TODO_LIST_ITEM:
-            state = JSON.parse(JSON.stringify(state));
-            state.todoList.push({
+            return state.withMutations((newState: IState) => newState.set('todoList', newState.get('todoList').push(fromJS({
                 completed: false,
-                content: state.inputValue,
+                content: newState.get('inputValue'),
                 id: parseInt(String(Math.random() * 1000), 10)
-            });
-            state.inputValue = '';
-            state.left = calcLeft(state.filterName, state.todoList);
-            return state;
+            })))
+                .set('inputValue', '')
+                .set('left', calcLeft(newState.get('filterName'), newState.get('todoList'))));
         case actionTypes.DELETE_TODO_LIST_ITEM:
-            state = JSON.parse(JSON.stringify(state));
-            state.todoList = state.todoList.filter((todo: ITodo) => {
-                return todo.id !== action.value;
-            });
-            state.left = calcLeft(state.filterName, state.todoList);
-            return state;
+            return state.withMutations((newState: IState) => newState.set('todoList', newState.get('todoList').filter((todo: ITodo) => {
+                    return todo.get('id') !== action.value;
+                }))
+                .set('left', calcLeft(newState.get('filterName'), newState.get('todoList'))));
         case actionTypes.CHANGE_TODO_LIST_ITEM_STATE:
-            state = JSON.parse(JSON.stringify(state));
-            state.todoList.map((todo: ITodo) => {
-                if (todo.id === action.value) {
-                    todo.completed = !todo.completed;
+            return state.withMutations((newState: IState) => newState.set('todoList', newState.get('todoList').map((todo: ITodo) => {
+                if (todo.get('id') === action.value) {
+                    return todo.set('completed', !todo.get('completed'));
                 }
                 return todo;
-            });
-            state.left = calcLeft(state.filterName, state.todoList);
-            return state;
+            }))
+                .set('left', calcLeft(newState.get('filterName'), newState.get('todoList'))));
         case actionTypes.HANDLE_TODO_LIST_FILTER:
-            state = JSON.parse(JSON.stringify(state));
-            state.filterName = action.value;
-            state.left = calcLeft(state.filterName, state.todoList);
-            return state;
+            return state.withMutations((newState: IState) => newState.set('filterName', action.value)
+                .set('left', calcLeft(newState.get('filterName'), newState.get('todoList'))));
         case actionTypes.HANDLE_TODO_LIST_CLEAR:
-            state = JSON.parse(JSON.stringify(state));
-            state.todoList = state.todoList.filter((todo: ITodo) => {
-                return todo.completed !== true;
-            });
-            state.left = calcLeft(state.filterName, state.todoList);
-            return state;
+            return state.withMutations((newState: IState) => newState.set('todoList', newState.get('todoList').filter((todo: ITodo) => {
+                return todo.get('completed') !== true;
+            }))
+                .set('left', calcLeft(newState.get('filterName'), newState.get('todoList'))));
         default:
             return state;
     }

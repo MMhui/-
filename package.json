@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/immutable": "^3.8.7",
     "@types/lodash": "^4.14.117",
     "@types/react-redux": "^6.0.9",
     "@types/redux-devtools": "^3.0.44",

@@ -1,4 +1,5 @@
 import * as actionTypes from './actionTypes';
+import { fromJS } from 'immutable';
 
 interface ITodo {
     completed: boolean;
@@ -45,7 +46,7 @@ export const getInitTodoListAction = () => ({
 
 export const initInputValueAction = (value: string) => ({
     type: actionTypes.INIT_INPUT_VALUE,
-    value
+    value: fromJS(value)
 });
 
 export const getInitInputValueAction = () => ({

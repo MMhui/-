@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import * as actionCreator from "../store/actionCreator";
 import './index.styl';
 
-interface ITodo {
+interface ITodo extends Map<any, any>{
     completed: boolean;
     content: string;
     id: number;
@@ -25,20 +25,19 @@ class Item extends React.PureComponent<IProps, ITodo> {
     };
 
     public onChangeTodoListItemState(){
-        this.props.handleChangeTodoListItemState(this.props.todo.id);
+        this.props.handleChangeTodoListItemState(this.props.todo.get('id'));
     }
 
     public onDeleteTodoListItem(){
-        this.props.handleDeleteTodoListItem(this.props.todo.id);
+        this.props.handleDeleteTodoListItem(this.props.todo.get('id'));
     }
 
     public render() {
-        // const { handleChangeTodoListItemState, handleDeleteTodoListItem, todoList } = this.props;
         const { todo } = this.props;
           return (
-              <div className={todo.completed ? 'todo-item completed' : 'todo-item'}>
-                  <input type="checkbox" className="toggle" checked={todo.completed} onChange={ this.onChangeTodoListItemState } />
-                  <label>{todo.content}</label>
+              <div className={todo.get('completed') ? 'todo-item completed' : 'todo-item'}>
+                  <input type="checkbox" className="toggle" checked={todo.get('completed')} onChange={ this.onChangeTodoListItemState } />
+                  <label>{todo.get('content')}</label>
                   <button className="destory" onClick={ this.onDeleteTodoListItem } />
               </div>
           );

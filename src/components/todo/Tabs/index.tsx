@@ -11,7 +11,7 @@ interface IProps {
     handleClearCompleted: () => void;
 }
 
-interface IState {
+interface IState extends Map<any, any> {
     filterName: string;
     left: number;
     tabs: string[];
@@ -37,9 +37,9 @@ class Tabs extends React.PureComponent<IProps, IState> {
 
 const mapStateToProps = (state: IState) => {
     return {
-        filterName: state.filterName,
-        left: state.left,
-        tabs: state.tabs
+        filterName: state.get('filterName'),
+        left: state.get('left'),
+        tabs: state.get('tabs')
     };
 };
 

@@ -4,14 +4,15 @@ import * as actionCreator from '../store/actionCreator';
 import Item from '../Item';
 import Tabs from '../Tabs';
 import './index.styl';
+import { Map } from 'immutable';
 
-interface ITodo {
+interface ITodo extends Map<any, any>{
     completed: boolean;
     content: string;
     id: number;
 }
 
-interface IState {
+interface IState extends Map<any, any> {
     filterName: string;
     todoList: ITodo[];
     inputValue: string;
@@ -27,7 +28,7 @@ interface IProps {
     todoList: ITodo[]
 }
 
-class Todo extends React.Component<IProps, IState> {
+class Todo extends React.PureComponent<IProps, IState> {
     public componentDidMount() {
         this.props.initInputValue();
         this.props.initTodoList();
@@ -35,13 +36,14 @@ class Todo extends React.Component<IProps, IState> {
 
     public render() {
         const {addTodoListItem, changeInputValue, filterName, inputValue, todoList} = this.props;
+        // const {addTodoListItem, changeInputValue, inputValue, todoList} = this.props;
         return (
             <section className="real-app">
                 <input className="add-input" autoFocus={true} type="text" value={ inputValue } onChange={ changeInputValue } onKeyDown={ addTodoListItem }  placeholder="接下去要做什么？" />
                 {
                     todoList.map((todo: ITodo) => {
-                        if (filterName === 'all' || (filterName === 'active' && todo.completed === false) || (filterName === 'completed' && todo.completed === true)) {
-                            return <Item key={String(todo.id)} todo={todo} />
+                        if (filterName === 'all' || (filterName === 'active' && todo.get('completed') === false) || (filterName === 'completed' && todo.get('completed') === true)) {
+                            return <Item key={String(todo.get('id'))} todo={todo} />
                         } else {
                             return null;
                         }
@@ -54,10 +56,11 @@ class Todo extends React.Component<IProps, IState> {
 }
 
 const mapStateToProps = (state: IState) => {
+    // console.log(state.get('todoList').map());
     return {
-        filterName: state.filterName,
-        inputValue: state.inputValue,
-        todoList: state.todoList
+        filterName: state.get('filterName'),
+        inputValue: state.get('inputValue'),
+        todoList: state.get('todoList')
     };
 };
 
@@ -76,7 +79,6 @@ const mapDispatchToProps = (dispatch: any) => {
             if (e.keyCode === 13 && e.target.value !== '') {
                 dispatch(actionCreator.addTodoListItemAction());
             }
-
         }
     };
 };
