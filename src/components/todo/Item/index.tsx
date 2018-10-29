@@ -1,40 +1,67 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
+import * as actionCreator from "../store/actionCreator";
 import './index.styl';
 
-interface IProps {
-    todo: {
-        id: number;
-        completed: boolean;
-        content: string
-    };
-    onChangeTodoListItemState: (id: number) => void;
-    onDeleteTodoListItem: (id: number) => void;
+interface ITodo {
+    completed: boolean;
+    content: string;
+    id: number;
 }
 
-export default class Item extends React.Component<IProps, any> {
+interface IProps {
+    key: string;
+    handleChangeTodoListItemState: (id: number) => void;
+    handleDeleteTodoListItem: (id: number) => void;
+    todo: ITodo
+}
+
+class Item extends React.PureComponent<IProps, ITodo> {
 
     constructor(props: IProps) {
         super(props);
         this.onChangeTodoListItemState = this.onChangeTodoListItemState.bind(this);
         this.onDeleteTodoListItem = this.onDeleteTodoListItem.bind(this);
-    }
+    };
 
     public onChangeTodoListItemState(){
-        this.props.onChangeTodoListItemState(this.props.todo.id);
+        this.props.handleChangeTodoListItemState(this.props.todo.id);
     }
 
     public onDeleteTodoListItem(){
-        this.props.onDeleteTodoListItem(this.props.todo.id);
+        this.props.handleDeleteTodoListItem(this.props.todo.id);
     }
 
     public render() {
+        // const { handleChangeTodoListItemState, handleDeleteTodoListItem, todoList } = this.props;
         const { todo } = this.props;
-        return (
-            <div className={todo.completed ? 'todo-item completed' : 'todo-item'}>
-                <input type="checkbox" className="toggle" checked={todo.completed} onChange={this.onChangeTodoListItemState} />
-                <label>{todo.content}</label>
-                <button className="destory" onClick={this.onDeleteTodoListItem} />
-            </div>
-        );
+          return (
+              <div className={todo.completed ? 'todo-item completed' : 'todo-item'}>
+                  <input type="checkbox" className="toggle" checked={todo.completed} onChange={ this.onChangeTodoListItemState } />
+                  <label>{todo.content}</label>
+                  <button className="destory" onClick={ this.onDeleteTodoListItem } />
+              </div>
+          );
     }
 }
+
+const mapStateToProps = (state: any) => {
+    return {};
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        handleChangeTodoListItemState(id: number) {
+            dispatch(actionCreator.changeTodoListItemStateAction(id));
+        },
+        handleDeleteTodoListItem(id: number) {
+            dispatch(actionCreator.deleteTodoListItemAction(id));
+        },
+    };
+};
+
+const mergeProps = (stateProps: any, dispatchProps: any, ownProps: any) => {
+    return Object.assign({}, ownProps, dispatchProps, stateProps)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps, mergeProps)(Item);

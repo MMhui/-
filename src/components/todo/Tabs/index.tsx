@@ -1,44 +1,57 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
+import * as actionCreator from "../store/actionCreator";
 import './index.styl';
 
 interface IProps {
-    filter: string;
+    filterName: string;
     left: number;
-    handleTodoListFilter: (condition: string) => void;
+    tabs: string[];
+    handleTodoListFilter: (filterName: string) => void;
     handleClearCompleted: () => void;
 }
 
-class Tabs extends React.PureComponent<IProps, any> {
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            tabs: ['all', 'active', 'completed']
-        };
-        this.handleTodoListFilter = this.handleTodoListFilter.bind(this);
-        this.handleClearCompleted = this.handleClearCompleted.bind(this);
-    }
+interface IState {
+    filterName: string;
+    left: number;
+    tabs: string[];
+}
 
-    public handleTodoListFilter(condition: string) {
-        this.props.handleTodoListFilter(condition);
-    }
-
-    public handleClearCompleted() {
-        this.props.handleClearCompleted();
-    }
+class Tabs extends React.PureComponent<IProps, IState> {
 
     public render() {
+        const { filterName, handleTodoListFilter, handleClearCompleted, left, tabs } = this.props;
         return (
             <div className="helper">
-                <span className="left">{this.props.left} items left</span>
+                <span className="left">{ left } items left</span>
                 <span className="tabs">
                     {
-                        this.state.tabs.map((ele: any) => <span className={this.props.filter === ele ? 'state actived' : 'state'} onClick={() => this.handleTodoListFilter(ele)} key={ele}>{ele}</span>)
+                        tabs.map((ele: any) => <span className={filterName === ele ? 'state actived' : 'state'} onClick={() => handleTodoListFilter(ele)} key={ele}>{ele}</span>)
                     }
                 </span>
-                <span className="clear" onClick={this.handleClearCompleted}>Clear Completed!</span>
+                <span className="clear" onClick={ handleClearCompleted }>Clear Completed!</span>
             </div>
         );
     }
 }
 
-export default Tabs;
+const mapStateToProps = (state: IState) => {
+    return {
+        filterName: state.filterName,
+        left: state.left,
+        tabs: state.tabs
+    };
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        handleTodoListFilter(filterName: string) {
+            dispatch(actionCreator.handleTodoListFilterAction(filterName));
+        },
+        handleClearCompleted() {
+            dispatch(actionCreator.handleTodoListClearAction());
+        }
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tabs);
